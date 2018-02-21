@@ -2,7 +2,7 @@
 ### General Assembly Capstone Project
 by Daryl Cheong
 
-![sales process](https://github.com/DarylCheong/GA-Capstone/blob/master/images/sales_process.jpg)
+![sales process](https://darylcheong.github.io/GA-Capstone/images/sales_process.jpg)
 
 # Introduction
 Sales is one of the essential components of any business. It is the act of selling goods or services to an interested party, in exchange for money. This process allows a business to generate revenue, which is why it is so vital for any organisation. Without sales, a business will not be able to grow or even survive.
@@ -35,7 +35,7 @@ Due to the importance of sales, this project will examine the sales process of a
 
 # Part 1 Pre-Processing
 
-![sales pipeline](https://github.com/DarylCheong/GA-Capstone/blob/master/images/sales_pipeline.png)
+![sales pipeline](https://darylcheong.github.io/GA-Capstone/images/sales_pipeline.png)
 
 ### 1.1 - Data Overview
 In this project, we will be looking at the sales database for an auntomotive suppliers wholesaler. This is a sample dataset provided by [IBM Watson Analytics](https://www.ibm.com/communities/analytics/watson-analytics-blog/sales-win-loss-sample-dataset/). The database describes the sales pipeline for every sales opportunity, which covers 3 key stages:-
@@ -70,17 +70,17 @@ Before processing, it is necessary to conduct checks to evaluate the integrity o
 
 Missing values is a common problem faced in data science. Fortunately in our case, the dataset is complete without any missing values.
 
-![missing values](https://github.com/DarylCheong/GA-Capstone/blob/master/images/missing_values.png)
+![missing values](https://darylcheong.github.io/GA-Capstone/images/missing_values.png)
 
 We will next take a look at the 3 ratio columns (**Ratio_Identify**, **Ratio_Validate**, **Ratio_Qualify**) to ensure that the total value does not exceed 1. A new column **Total_Ratio** will be created that sums up the values of these 3 columns.
 
 The results of the new **Total_Ratio** column shows that there are 471 records with a total ratio that exceeds the total of 1. Upon closer inspection, the exceeded amount for each of these records is very minor and we can assume that this is possibly due to the rounding of the 3 values and thus we will let these remain as is.
 
-![rounding](https://github.com/DarylCheong/GA-Capstone/blob/master/images/rounding.png)
+![rounding](https://darylcheong.github.io/GA-Capstone/images/rounding.png)
 
 However, there is a single record that has an extreme value of 1.007547, which was previously highlighted using the **.describe()** command above. This record will therefore be removed.
 
-![outlier](https://github.com/DarylCheong/GA-Capstone/blob/master/images/outlier.png)
+![outlier](https://darylcheong.github.io/GA-Capstone/images/outlier.png)
 
 The string values for the categorical columns will also be cleaned up to ensure a consistent format.
 
@@ -91,17 +91,17 @@ With the data cleaned, we can now carry out EDA and perform an in-depth analysis
 
 We shall begin by examining the correlation between the numerical columns through the construction of a heatmap.
 
-![heatmap](https://github.com/DarylCheong/GA-Capstone/blob/master/images/heatmap.png)
+![heatmap](https://darylcheong.github.io/GA-Capstone/images/heatmap.png)
 
 The heatmap above immediately higlights an almost perfect correlation between the Total_Days and Total_Siebel columns. This will have a negative impact on our models, therefore the Total_Siebal column will be dropped. The other numerical columns have a low to moderate correlation value, which are acceptable and no additional measures will be required.
 
 Next, we will analyse the distribution of each of our features by plotting histograms for our numerical columns and bar charts for the categorial columns.
 
-![numerical columns](https://github.com/DarylCheong/GA-Capstone/blob/master/images/numerical_columns.png)
+![numerical columns](https://darylcheong.github.io/GA-Capstone/images/numerical_columns.png)
 
 The plotted histograms show that the data in the almost all of the numerical columns have a  positively skewed distribution, with very few data points located on the right side. The 3 ratio columns represent data points that are located at both extreme ends of the scale and a minimal number in the middle.
 
-![categorical columns](https://github.com/DarylCheong/GA-Capstone/blob/master/images/categorical_columns.png)
+![categorical columns](https://darylcheong.github.io/GA-Capstone/images/categorical_columns.png)
 
 With regards to the categorical columns, we can see a decent distribution spread across all classes for the **Supplies_Sub**, **Region** and **Size** columns. However, the other features have a strong class imbalance distribution, with a single dominant class. Even our target feature **Result** has an imbalance where the majority class is about three times larger than the minority class. Class imbalance can have a negative impact on machine learning algorithms, and may result in predictive models that are biased and inaccurate. 
 
@@ -116,7 +116,7 @@ cars['Client_Past'] = cars['Client_Past'].map(lambda x: 0 if x == '0 (No busines
 ```
 Comparing the **Supplies** and **Supplies_Sub** columns, we can see that **Supplies_Sub** actually is more detailed and provides a clearer picture as compared to **Supplies**. Therefore, the **Supplies** column will be dropped.
 
-![supplies](https://github.com/DarylCheong/GA-Capstone/blob/master/images/supplies.png)
+![supplies](https://darylcheong.github.io/GA-Capstone/images/supplies.png)
 
 The **Total_Siebel** column was previously shown to be highly correlated to the **Total_Days** column, so that too will be removed.
 
