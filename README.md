@@ -12,23 +12,23 @@ Due to the importance of sales, this project will examine the sales process of a
 **Goal 2 - Predict the outcome of sales opportunity ('Result' column) using classification models**
 
 ### Table of Contents
-**Part 1 Pre-Processing** \
-1.1 - Data Overview \
-1.2 - Data Cleaning \
-1.3 - Exploratory Data Analysis \
-1.4 - Feature Engineering \
-**Part 2 Predict Opportunity Amount** \
-2.1 - Feature Selection\
-2.2 - Prepare target/predictor variables and train/test sets \
-2.3 - Model Generation \
-2.4 - Model Results Evaluation \
-2.5 - Model Selection \
-**Part 3 Predict Opportunity Outcome** \
-3.1 - Prepare target/predictor variables and train/test sets \
-3.2 - Data Imbalance \
-3.3 - Model Generation \
-3.4 - Model Results Evaluation \
-3.5 - Model Selection \
+**Part 1 Pre-Processing**
+1.1 - Data Overview
+1.2 - Data Cleaning
+1.3 - Exploratory Data Analysis
+1.4 - Feature Engineering
+**Part 2 Predict Opportunity Amount**
+2.1 - Feature Selection
+2.2 - Prepare target/predictor variables and train/test sets
+2.3 - Model Generation
+2.4 - Model Results Evaluation
+2.5 - Model Selection
+**Part 3 Predict Opportunity Outcome**
+3.1 - Prepare target/predictor variables and train/test sets
+3.2 - Data Imbalance
+3.3 - Model Generation
+3.4 - Model Results Evaluation
+3.5 - Model Selection
 **Conclusion**
 
 # Part 1 Pre-Processing
@@ -201,7 +201,7 @@ When comparing the **Random Forest** and **KNN** models, the undersampling model
 Since our goal is to predict the highest number of win opportunities, a model with high recall is desired. Being able to identify these accurately will mean more revenue for the business. Based on this, the **K-Nearest Neighbors (undersample)** model was able to achieve the highest recall score of 0.83, the highest **True Positive (TP)** rate of 4349, and lowest **False Negative (FN)** rate of 877. While its Type II error (**FP**) is one of the highest out of all the models, it is more acceptable to wrongly predict a loss opportunity than an inaccurate prediction of a won opportunity. Therefore, this model would be most suitable to achieve our goal of predicting the opportunity outcome.
 
 # Conclusion
-To view the full code, please check out the links below: \
-[Part 1 Pre-Processing](https://github.com/DarylCheong/GA-Capstone/blob/master/GA-DSI2-Capstone-Part1-Preprocessing.ipynb) \
-[Part 2 Predict Opportunity Amount](https://github.com/DarylCheong/GA-Capstone/blob/master/GA-DSI2-Capstone-Part2-Amount.ipynb) \
+To view the full code, please check out the links below:
+[Part 1 Pre-Processing](https://github.com/DarylCheong/GA-Capstone/blob/master/GA-DSI2-Capstone-Part1-Preprocessing.ipynb)
+[Part 2 Predict Opportunity Amount](https://github.com/DarylCheong/GA-Capstone/blob/master/GA-DSI2-Capstone-Part2-Amount.ipynb)
 [Part 3 Predict Opportunity Outcome](https://github.com/DarylCheong/GA-Capstone/blob/master/GA-DSI2-Capstone-Part3-Outcome.ipynb)
