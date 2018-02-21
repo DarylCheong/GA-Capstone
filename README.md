@@ -195,26 +195,47 @@ In terms of feature ranking, all 5 models share the same features that occupy th
 As mentioned earlier, the ideal model selected will be judged according to their R^2 and RMSE scores. As **Linear Regression**, **Lasso Regression** and **Ridge Regression** had the highest R^2 testing score and their values are identical, we will then compare the RMSE score between these 3 models. Based on our evaluation of the results above, we can conclude that the **Ridge Regression model** is the best choice with the lowest RMSE score of 39646.3218.
 
 # Part 3 Predict Opportunity Outcome
+
+![sales growth](https://darylcheong.github.io/GA-Capstone/images/sales_growth.jpg)
+
 In part 3 of this project, we will now create classification models to predict the sales opportunity outcome (**Result** column). Previously in our pre-processing stage, we converted the values in the **Result** column into binary numbers. In this case, the number 1 will represent the opportunities that were won, while the number 0 represents the opportunities that were lost. Hence, our goal will be to accurately predict the highest number of 1s.
 
 ### 3.1 - Prepare target/predictor variables and train/test sets
 To prepare our data, we will use the holdout method to split our dataset. We will use training set that comprises of 70% of the data to train our models, and a testing set of 30% to assess their predictions. 5-fold cross validation will also be applied to the training set for each of our models. 
 
-A check on the distribution of values in the target column reveals an imbalance whereby the majority class 0 has a total count of more than 3 times when compared to the minority class 1. The issue of imbalance is a concern and will be addressed in the next section. 
-
 Our models will need to achieve an accuracy score that is higher than the baseline of 0.77408.
 
 The next step incorporates the **SelectFromModel** function from **sklearn** to perform feature selection, and the **RandomForestClassifier** will be applied inside the function as an estimator to identify the feature importance. 
-
+```
+from sklearn.feature_selection import SelectFromModel
+from sklearn.ensemble import RandomForestClassifier
+select = SelectFromModel(RandomForestClassifier())
+select.fit(Xs_train, y_train)
+Xs_train = select.transform(Xs_train)
+Xs_test = select.transform(Xs_test)
+feature_support = pd.DataFrame({'feature': X_train.columns, 'support': select.get_support()})
+feature_support.sort_values('support', inplace=True, ascending=False)
+feature_support.head(10)
+```
 The results show that out of the 44 features in our dataset, only 9 were selected. This means that these 9 features had the biggest influence in prediction the opportunity outcome.
 
+![feature importance](https://darylcheong.github.io/GA-Capstone/images/feature_importance.png)
+
 ### 3.2 - Data Imbalance
-To solve the problem of class imbalance, we will utilize 2 different techniques from the python package **imblearn** to resample the data in our training set.
+As previously shown in our distribution plots under the EDA section, there is an imbalance in our target column whereby the majority class 0 has a total count of more than 3 times when compared to the minority class 1. To solve the problem of class imbalance, we will utilize 2 different techniques from the python package **imblearn** to resample the data in our training set.
 
 **RandomOverSampler** - randomly oversample the minority class (1) with replacement.
-
+```
+from imblearn.over_sampling import RandomOverSampler
+ros = RandomOverSampler(random_state=100)
+Xs_train_ros, y_train_ros = ros.fit_sample(Xs_train, y_train)
+```
 **RandomUnderSampler** - randomly undersample the majority class (0) with replacement.
-
+```
+from imblearn.under_sampling import RandomUnderSampler
+rus = RandomUnderSampler(random_state=100)
+Xs_train_rus, y_train_rus = rus.fit_sample(Xs_train, y_train)
+```
 Oversampling will increase the number of minority class from 12401 to 42215, while undersampling will reduce the number of majority class from 42215 to 12401. The end result after resampling is 3 different training sets (default, oversample, undersample).
 
 ### 3.3 - Model Generation
@@ -230,18 +251,28 @@ Now that we have our training and testing datasets, we can begin to generate our
 ### 3.4 - Model Results Evaluation
 With the models completed, we can now compile all the results into a new pandas dataframe, making it easier to compare the results. Graphical representations will also be generated to help visualise the output.
 
+An example of the output results for the **Logistic Regression (default)** model is shown below.
+
+![logreg results](https://darylcheong.github.io/GA-Capstone/images/logreg_results.png)
+
 Model performance will be judged based on 3 key criterias:-
 1. Confusion matrix results (TN, FP, FN, TP)
 2. Accuracy scores (training, cross validation, testing, AUC ROC)
 3. Precision and recall scores of the minority class
 
-From the precision and recall graphs, we can see an inverse correlation between them. Models that had a high precision result like **random forest (default)** and **knn (default)** did not perform well in recall, while models with high recall results like **knn (undersample)** and **random forest (undersample)** had a lower precision result.
+![precision recall](https://darylcheong.github.io/GA-Capstone/images/precision_recall.png)
+
+From the precision and recall graphs above, we can see an inverse correlation between them. Models that had a high precision result like **Random Forest (default)** and **KNN (default)** did not perform well in recall, while models with high recall results like **KNN (undersample)** and **Random Forest (undersample)** had a lower precision result.
 
 Another interesting point to note is that default models achieved higher precision scores while models with undersampling had higher recall scores.
 
+![accuracy results](https://darylcheong.github.io/GA-Capstone/images/accuracy_results.png)
+
 In terms of accuracy scores, the testing results of all 9 models were able to exceed the baseline accuracy of 0.77408. The **Logistic Regression** models in general had the lowest scores, while the **Random Forest** models had the best.
 
-When comparing the 4 accuracy graphs,the random forest (oversample) model was able to achieve one of the highest scores across all 4.
+When comparing the 4 accuracy graphs,the random forest (oversample) model was consistently able to achieve one of the highest scores across all 4.
+
+![conmat results](https://darylcheong.github.io/GA-Capstone/images/conmat_results.png)
 
 Looking at the confusion matrix results, the **KNN (undersample)** and **Random Forest (Undersample)** models had the highest number of correct predictions for the minority class (**TP**), while the **Random Forest (default)** and **Logistic Regression (default)** models had the most number of majority class predictions (**TN**).
 
@@ -250,9 +281,15 @@ In terms of wrong predictions, **Logistic Regression (oversample and undersample
 When comparing the **Random Forest** and **KNN** models, the undersampling models had the most **False Positive (FP)** errors and the lowest **False Negative (FN)** rates . On the other hand, while default and oversampling models may have a lower **FP** rate, their **FN** rate is higher.
 
 ### 3.5 - Model Selection
+
+![model results](https://darylcheong.github.io/GA-Capstone/images/model_results.png)
+
 Since our goal is to predict the highest number of win opportunities, a model with high recall is desired. Being able to identify these accurately will mean more revenue for the business. Based on this, the **K-Nearest Neighbors (undersample)** model was able to achieve the highest recall score of 0.83, the highest **True Positive (TP)** rate of 4349, and lowest **False Negative (FN)** rate of 877. While its Type II error (**FP**) is one of the highest out of all the models, it is more acceptable to wrongly predict a loss opportunity than an inaccurate prediction of a won opportunity. Therefore, this model would be most suitable to achieve our goal of predicting the opportunity outcome.
 
 # Conclusion
+
+
+
 To view the full code, please check out the links below:  
 [Part 1 Pre-Processing](https://github.com/DarylCheong/GA-Capstone/blob/master/GA-DSI2-Capstone-Part1-Preprocessing.ipynb)  
 [Part 2 Predict Opportunity Amount](https://github.com/DarylCheong/GA-Capstone/blob/master/GA-DSI2-Capstone-Part2-Amount.ipynb)  
