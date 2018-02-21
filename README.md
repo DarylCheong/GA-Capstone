@@ -2,8 +2,10 @@
 ### General Assembly Capstone Project
 by Daryl Cheong
 
+![sales process](https://github.com/DarylCheong/GA-Capstone/blob/master/images/sales_process.jpg)
+
 # Introduction
-Sales is one of the essential components of any business. It involves the act of selling goods or services to an interested party, in exchange for money. This process allows a business to generate revenue, which is why it is so vital for any organisation. Without sales, a business will not be able to grow or even survive.
+Sales is one of the essential components of any business. It is the act of selling goods or services to an interested party, in exchange for money. This process allows a business to generate revenue, which is why it is so vital for any organisation. Without sales, a business will not be able to grow or even survive.
 
 Due to the importance of sales, this project will examine the sales process of an organisation and seek to achieve the following goals:-
 
@@ -32,6 +34,9 @@ Due to the importance of sales, this project will examine the sales process of a
 **Conclusion**  
 
 # Part 1 Pre-Processing
+
+![sales pipeline](https://github.com/DarylCheong/GA-Capstone/blob/master/images/sales_pipeline.png)
+
 ### 1.1 - Data Overview
 In this project, we will be looking at the sales database for an auntomotive suppliers wholesaler. This is a sample dataset provided by [IBM Watson Analytics](https://www.ibm.com/communities/analytics/watson-analytics-blog/sales-win-loss-sample-dataset/). The database describes the sales pipeline for every sales opportunity, which covers 3 key stages:-
 1. Identified/Qualifying 
@@ -60,18 +65,22 @@ This dataset consists of 78,025 rows and 19 columns (9 numerical, 10 categorical
 18. **Ratio_Validate** - Ratio of total days spent in the Validated/Qualifying stage over total days in sales process.
 19. **Ratio_Qualify** - Ratio of total days spent in Qualified/Gaining Agreement stage over total days in sales process.
 
-We will begin by importing the dataset and necessary packages.
-
 ### 1.2 - Data Cleaning
 Before processing, it is necessary to conduct checks to evaluate the integrity of the dataset. Incorrect and incomplete data will affect the results of our models, so these issues will need to be identified and addressed first.
 
 Missing values is a common problem faced in data science. Fortunately in our case, the dataset is complete without any missing values.
 
+![missing values](https://github.com/DarylCheong/GA-Capstone/blob/master/images/missing_values.png)
+
 We will next take a look at the 3 ratio columns (**Ratio_Identify**, **Ratio_Validate**, **Ratio_Qualify**) to ensure that the total value does not exceed 1. A new column **Total_Ratio** will be created that sums up the values of these 3 columns.
 
 The results of the new **Total_Ratio** column shows that there are 471 records with a total ratio that exceeds the total of 1. Upon closer inspection, the exceeded amount for each of these records is very minor and we can assume that this is possibly due to the rounding of the 3 values and thus we will let these remain as is.
 
+![rounding](https://github.com/DarylCheong/GA-Capstone/blob/master/images/rounding.png)
+
 However, there is a single record that has an extreme value of 1.007547, which was previously highlighted using the **.describe()** command above. This record will therefore be removed.
+
+![outlier](https://github.com/DarylCheong/GA-Capstone/blob/master/images/outlier.png)
 
 The string values for the categorical columns will also be cleaned up to ensure a consistent format.
 
@@ -82,29 +91,47 @@ With the data cleaned, we can now carry out EDA and perform an in-depth analysis
 
 We shall begin by examining the correlation between the numerical columns through the construction of a heatmap.
 
-Looking at the heatmap above, one thing that immediately stands out is the extremely high correlation between the Total_Days and Total_Siebel columns. This will have a negative impact on our models, therefore the Total_Siebal column will be dropped. The other numerical columns have a low to moderate correlation value, which are acceptable and no additional measures will be required.
+![heatmap](https://github.com/DarylCheong/GA-Capstone/blob/master/images/heatmap.png)
+
+The heatmap above immediately higlights an almost perfect correlation between the Total_Days and Total_Siebel columns. This will have a negative impact on our models, therefore the Total_Siebal column will be dropped. The other numerical columns have a low to moderate correlation value, which are acceptable and no additional measures will be required.
 
 Next, we will analyse the distribution of each of our features by plotting histograms for our numerical columns and bar charts for the categorial columns.
 
+![numerical columns](https://github.com/DarylCheong/GA-Capstone/blob/master/images/numerical_columns.png)
+
 The plotted histograms show that the data in the almost all of the numerical columns have a  positively skewed distribution, with very few data points located on the right side. The 3 ratio columns represent data points that are located at both extreme ends of the scale and a minimal number in the middle.
+
+![categorical columns](https://github.com/DarylCheong/GA-Capstone/blob/master/images/categorical_columns.png)
 
 With regards to the categorical columns, we can see a decent distribution spread across all classes for the **Supplies_Sub**, **Region** and **Size** columns. However, the other features have a strong class imbalance distribution, with a single dominant class. Even our target feature **Result** has an imbalance where the majority class is about three times larger than the minority class. Class imbalance can have a negative impact on machine learning algorithms, and may result in predictive models that are biased and inaccurate. 
 
 ### 1.4 - Feature Engineering
 The next step requires making some changes to our existing features. We will begin by converting the values in our target column **Result** into binary values.
-
+```
+cars['Result'] = cars['Result'].map(lambda x: 0 if x == 'Loss' else 1)
+```
 The classes in the **Client_Past** columns are also changed. The data is grouped into 2 classes to identify if the opportunity is from a new client or existing client, rather than separating into 5 classes.
-
+```
+cars['Client_Past'] = cars['Client_Past'].map(lambda x: 0 if x == '0 (No business)' else 1)
+```
 Comparing the **Supplies** and **Supplies_Sub** columns, we can see that **Supplies_Sub** actually is more detailed and provides a clearer picture as compared to **Supplies**. Therefore, the **Supplies** column will be dropped.
 
-The **Total_Siebel** column was previously showly to be highly correlated to the **Total_Days** column, so that too will be removed.
+![supplies](https://github.com/DarylCheong/GA-Capstone/blob/master/images/supplies.png)
+
+The **Total_Siebel** column was previously shown to be highly correlated to the **Total_Days** column, so that too will be removed.
 
 Due to the number of categorical features in our dataset, we will utilize pandas' **get_dummies** function to create 38 new dummy variables to replace the original categorical columns. This new set of dummy variables can be then concatenated with the original dataset to create a new dataset which we will use in our predictions.
-
+```
+cat_dummy = pd.get_dummies(cars2[cat_columns], drop_first=True)
+cars2.drop(cat_columns, axis=1, inplace=True)
+cars2 = pd.concat([cars2, cat_dummy], axis=1)
+```
 With this new dataset, we are now ready to commence building our predictive models.
 
 # Part 2 Predict Opportunity Amount
 All businesses are interested in knowing how much revenue they can make for each transaction, therefore being able to estimate the value of a sales opportunity would be very useful. For this project, the objective will be to predict the values in the **Amount** column and this will be accomplished through the use of Regression algorithms. But first, we will first need to prepare our data for model generation.
+
+![revenue](https://github.com/DarylCheong/GA-Capstone/blob/master/images/revenue.png)
 
 ### 2.1 - Feature Selection
 We will begin by performing feature selection by using the **statsmodels** python package to analyse the p-values of each feature. Any features with a p-value or 0.05 and higher will be deemed insignificant and thus will be dropped. Using this method, 20 out of 44 features were removed.
