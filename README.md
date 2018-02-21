@@ -131,7 +131,7 @@ With this new dataset, we are now ready to commence building our predictive mode
 # Part 2 Predict Opportunity Amount
 All businesses are interested in knowing how much revenue they can make for each transaction, therefore being able to estimate the value of a sales opportunity would be very useful. For this project, the objective will be to predict the values in the **Amount** column and this will be accomplished through the use of Regression algorithms. But first, we will first need to prepare our data for model generation.
 
-![revenue](https://github.com/DarylCheong/GA-Capstone/blob/master/images/revenue.png)
+![revenue](https://darylcheong.github.io/GA-Capstone/images/revenue.png)
 
 ### 2.1 - Feature Selection
 We will begin by performing feature selection by using the **statsmodels** python package to analyse the p-values of each feature. Any features with a p-value or 0.05 and higher will be deemed insignificant and thus will be dropped. Using this method, 20 out of 44 features were removed.
