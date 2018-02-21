@@ -134,11 +134,28 @@ All businesses are interested in knowing how much revenue they can make for each
 ![revenue](https://darylcheong.github.io/GA-Capstone/images/revenue.png)
 
 ### 2.1 - Feature Selection
-We will begin by performing feature selection by using the **statsmodels** python package to analyse the p-values of each feature. Any features with a p-value or 0.05 and higher will be deemed insignificant and thus will be dropped. Using this method, 20 out of 44 features were removed.
+We will begin by performing feature selection by using the **.summary()** command from **statsmodels** python package to analyse the p-values of each feature. Any features with a p-value or 0.05 and higher will be deemed insignificant and thus dropped. 
+
+![pvalue1](https://darylcheong.github.io/GA-Capstone/images/pvalue1.png)
+
+These are the features that were dropped.
+```
+cars2.drop(['Ratio_Identify', 'Supplies_Sub_Electronics', 'Supplies_Sub_Garage_Car_Care', 'Market_Other',
+            'Client_Revenue_500K_to_1M', 'Client_Revenue_250K_to_500K', 'Supplies_Sub_Towing_Hitches',
+            'Client_Revenue_Above_1M', 'Client_Revenue_Below_100K', 'Client_Employee_1K_to_5K',
+            'Client_Employee_5K_to_15K', 'Client_Employee_Below_1K', 'Client_Employee_Above_25K',
+            'Supplies_Sub_Tires_Wheels', 'Region_Midwest', 'Elapsed_Days', 'Supplies_Sub_Replacement',
+            'Supplies_Sub_Motorcycle_Parts', 'Ratio_Validate', 'Total_Days'], axis=1, inplace=True)
+```
+Using this method, 20 out of 44 features were removed. The selected features are shown below.
+
+![pvalue2](https://darylcheong.github.io/GA-Capstone/images/pvalue2.png)
 
 ### 2.2 - Prepare target/predictor variables and train/test sets
 To prepare our data, we will use the holdout method to split our dataset. We will use training set that comprises of 70% of the data to train our models, and a testing set of 30% to assess their predictions. 5-fold cross validation will also be applied to the training set for each of our models. 
-
+```
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, random_state=100)
+```
 ### 2.3 - Model Generation
 Model construction can begin by using the new prepared datasets.
 
@@ -149,6 +166,10 @@ Model construction can begin by using the new prepared datasets.
 4. SGD Regression
 5. Random Forest Regression
 
+The example diagram below illustrates the code use to build the **Lasso Regression** model.
+
+![lasso reg](https://darylcheong.github.io/GA-Capstone/images/lasso_reg.png)
+
 The results for each of the 5 models will be collected and evaluated, before selecting the model that best predicts the opportunity amount.
 
 ### 2.4 - Model Results Evaluation
@@ -158,11 +179,15 @@ Model performance will be judged based on 2 key criterias:-
 1. R^2 score (training, cross validation, testing)
 2. Root Mean Squared Error score (RMSE)
 
-We will also compare the feature rankings for each model.
+We will also take a look the feature rankings for each model.
 
 When conducting evaluation, we are looking for a model with a high R^2 score and low RMSE score. The R^2 score would indicate the goodness of fit of a set of predictions on the actual values, RMSE indicates the magnitude of error between the predicted and actual value in terms of the output value.
 
+![reg results](https://darylcheong.github.io/GA-Capstone/images/reg_results.png)
+
 Looking at the compiled results, we see that **Linear**, **Lasso** and **Ridge Regression** achieved the highest R^2 scores, and the results were identical. Even their RMSE score was almost the same. On the other hand, the **Random Forest Regression** model performed the worst with the lowest R^2 score and highest RMSE score.
+
+![coef results](https://darylcheong.github.io/GA-Capstone/images/coef_results.png)
 
 In terms of feature ranking, all 5 models share the same features that occupy the top 4 ranks, which are **Size_above_60K**, **Size_50K_to_60K**, **Size_40K_to_50K** and **Size_30K_to40K**. After that we start to see a difference in feature rankings between models. These top 4 features also have very similar coefficient values, with the exception of the **Random Forest Regression** model which uses a different weights scale. The coefficient values show us how large of an impact a particular feature has on the overall opportunity amount. 
 
