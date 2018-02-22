@@ -5,9 +5,9 @@ by Daryl Cheong
 ![sales process](https://darylcheong.github.io/GA-Capstone/images/sales_process.jpg)
 
 # Introduction
-Sales is one of the essential components of any business. It is the act of selling goods or services to an interested party, in exchange for money. This process allows a business to generate revenue, which is why it is so vital for any organisation. Without sales, a business will not be able to grow or even survive.
+Sales is one of the essential components of any business. It is the act of selling goods or services to an interested party, in exchange for money. It is the primary process for a business to generate revenue, which explains why it is so vital for any organisation. Without sales, a business will not have the resources necessary to grow or even survive.
 
-Due to the importance of sales, this project will examine the sales process of an organisation and seek to achieve the following goals:-
+Due to its importance, this project will examine the sales process of an organisation and seek to achieve the following goals:-
 
 **Goal 1 - Predict the value of sales opportunity ('Amount' column) using regression models**
 
@@ -21,12 +21,12 @@ Due to the importance of sales, this project will examine the sales process of a
 1.4 - Feature Engineering  
 **Part 2 Predict Opportunity Amount**  
 2.1 - Feature Selection  
-2.2 - Prepare target/predictor variables and train/test sets  
+2.2 - Prepare training/testing data  
 2.3 - Model Generation  
 2.4 - Model Results Evaluation  
 2.5 - Model Selection  
 **Part 3 Predict Opportunity Outcome**  
-3.1 - Prepare target/predictor variables and train/test sets  
+3.1 - Prepare training/testing data  
 3.2 - Data Imbalance  
 3.3 - Model Generation  
 3.4 - Model Results Evaluation  
@@ -38,12 +38,12 @@ Due to the importance of sales, this project will examine the sales process of a
 ![sales pipeline](https://darylcheong.github.io/GA-Capstone/images/sales_pipeline.png)
 
 ### 1.1 - Data Overview
-In this project, we will be looking at the sales database for an auntomotive suppliers wholesaler. This is a sample dataset provided by [IBM Watson Analytics](https://www.ibm.com/communities/analytics/watson-analytics-blog/sales-win-loss-sample-dataset/). The database describes the sales pipeline for every sales opportunity, which covers 3 key stages:-
+In this project, we will be looking at the sales database for an auntomotive suppliers wholesaler. This is a sample dataset provided by [IBM Watson Analytics](https://www.ibm.com/communities/analytics/watson-analytics-blog/sales-win-loss-sample-dataset/). The goal of the sales process is to identify and communicate with potential leads, and explore opportunities to convert them into customers. For this project, the database contains records of every sales opportunity with information about the client, product, and process status which focuses on 3 key stages:-
 1. Identified/Qualifying 
 2. Qualified/Validating 
 3. Validated/Gaining Agreement
 
-This dataset consists of 78,025 rows and 19 columns (9 numerical, 10 categorical). Every record provides information about the client, product and process status. The columns include the following:-
+This dataset consists of 78,025 rows and 19 columns (9 numerical, 10 categorical). The columns include the following:-
 
 1. **Amount** - Estimated total revenue of opportunities in USD. **(Goal 1)**
 2. **Result** - Outcome of opportunity. **(Goal 2)**
@@ -66,47 +66,51 @@ This dataset consists of 78,025 rows and 19 columns (9 numerical, 10 categorical
 19. **Ratio_Qualify** - Ratio of total days spent in Qualified/Gaining Agreement stage over total days in sales process.
 
 ### 1.2 - Data Cleaning
-Before processing, it is necessary to conduct checks to evaluate the integrity of the dataset. Incorrect and incomplete data will affect the results of our models, so these issues will need to be identified and addressed first.
+Before proceeding, it is necessary to conduct checks to evaluate the integrity of the dataset. Incorrect and incomplete data will affect the results of our models, so these issues will need to be identified and addressed first.
 
-Missing values is a common problem faced in data science. Fortunately in our case, the dataset is complete without any missing values.
+Missing values is a common problem faced in data science. Fortunately, our dataset is complete without any missing values.
 
 ![missing values](https://darylcheong.github.io/GA-Capstone/images/missing_values.png)
 
-We will next take a look at the 3 ratio columns (**Ratio_Identify**, **Ratio_Validate**, **Ratio_Qualify**) to ensure that the total value does not exceed 1. A new column **Total_Ratio** will be created that sums up the values of these 3 columns.
+Next, a check will be conducted on the 3 ratio columns (**Ratio_Identify**, **Ratio_Validate**, **Ratio_Qualify**) to ensure that the total value does not exceed 1. A new column **Total_Ratio** will be created that sums up the values of these 3 columns.
 
-The results of the new **Total_Ratio** column shows that there are 471 records with a total ratio that exceeds the total of 1. Upon closer inspection, the exceeded amount for each of these records is very minor and we can assume that this is possibly due to the rounding of the 3 values and thus we will let these remain as is.
+The results of the new **Total_Ratio** column shows that there are 471 records with a total ratio that exceeds the total of 1. Upon closer inspection, the exceeded amount for each of these records is very minor and it is safe to assume that this is possibly due to the rounding of the 3 values and thus these records will remain as is.
 
 ![rounding](https://darylcheong.github.io/GA-Capstone/images/rounding.png)
 
-However, there is a single record that has an extreme value of 1.007547, which was previously highlighted using the **.describe()** command above. This record will therefore be removed.
+However, there is a single record that has an extreme value of 1.007547. This record will therefore be removed.
 
 ![outlier](https://darylcheong.github.io/GA-Capstone/images/outlier.png)
 
 The string values for the categorical columns will also be cleaned up to ensure a consistent format.
-
+```
+cars['Client_Employee'].replace(['1K or less', 'More than 25K', '5K to 15K', '1K to 5K', '15K to 25K'],
+                                ['Below_1K', 'Above_25K', '5K_to_15K', '1K_to_5K', '15K_to_25K'],
+                                inplace=True)
+```
 Lastly, the **Id** and **Total_Ratio** columns will be dropped since they are no longer necessary.
 
 ### 1.3 - Exploratory Data Analysis
 With the data cleaned, we can now carry out EDA and perform an in-depth analysis of the data.
 
-We shall begin by examining the correlation between the numerical columns through the construction of a heatmap.
+Lets start by examining the correlation between the numerical columns through the construction of a heatmap.
 
 ![heatmap](https://darylcheong.github.io/GA-Capstone/images/heatmap.png)
 
 The heatmap above immediately higlights an almost perfect correlation between the Total_Days and Total_Siebel columns. This will have a negative impact on our models, therefore the Total_Siebal column will be dropped. The other numerical columns have a low to moderate correlation value, which are acceptable and no additional measures will be required.
 
-Next, we will analyse the distribution of each of our features by plotting histograms for our numerical columns and bar charts for the categorial columns.
+Next, we will analyse the distribution of our features by plotting various graphs.
 
 ![numerical columns](https://darylcheong.github.io/GA-Capstone/images/numerical_columns.png)
 
-The plotted histograms show that the data in the almost all of the numerical columns have a  positively skewed distribution, with very few data points located on the right side. The 3 ratio columns represent data points that are located at both extreme ends of the scale and a minimal number in the middle.
+We will use histograms to represent data in the numerical columns. Majority of the graphs show a positively skewed distribution, with very few data points located on the right side. The 3 ratio columns represent data points that are located at both extreme ends of the scale and a minimal number in the middle.
 
 ![categorical columns](https://darylcheong.github.io/GA-Capstone/images/categorical_columns.png)
 
-With regards to the categorical columns, we can see a decent distribution spread across all classes for the **Supplies_Sub**, **Region** and **Size** columns. However, the other features have a strong class imbalance distribution, with a single dominant class. Even our target feature **Result** has an imbalance where the majority class is about three times larger than the minority class. Class imbalance can have a negative impact on machine learning algorithms, and may result in predictive models that are biased and inaccurate. 
+With regards to the categorical columns, bar graphs illustrate the distribution across the different classes. We can see a decent spread across all classes for the **Supplies_Sub**, **Region** and **Size** columns. However, the other features have a strong class imbalance distribution, with a single dominant class. Even our target feature **Result** has an imbalance where the majority class is about three times larger than the minority class. Class imbalance can have a negative impact on machine learning algorithms, and may result in predictive models that are biased and inaccurate. 
 
 ### 1.4 - Feature Engineering
-The next step requires making some changes to our existing features. We will begin by converting the values in our target column **Result** into binary values.
+The next stage of pre-processing requires some changes to be made to the current features. The first step involves converting the values in our target column **Result** into binary values.
 ```
 cars['Result'] = cars['Result'].map(lambda x: 0 if x == 'Loss' else 1)
 ```
@@ -120,13 +124,13 @@ Comparing the **Supplies** and **Supplies_Sub** columns, we can see that **Suppl
 
 The **Total_Siebel** column was previously shown to be highly correlated to the **Total_Days** column, so that too will be removed.
 
-Due to the number of categorical features in our dataset, we will utilize pandas' **get_dummies** function to create 38 new dummy variables to replace the original categorical columns. This new set of dummy variables can be then concatenated with the original dataset to create a new dataset which we will use in our predictions.
+Due to the number of categorical features in our dataset, we will create 38 new dummy variables to replace the original categorical columns. This new set of dummy variables is then concatenated with the original dataset to create a new dataset to be used our predictions.
 ```
 cat_dummy = pd.get_dummies(cars2[cat_columns], drop_first=True)
 cars2.drop(cat_columns, axis=1, inplace=True)
 cars2 = pd.concat([cars2, cat_dummy], axis=1)
 ```
-With this new dataset, we are now ready to commence building our predictive models.
+With pre-processing completed, we are now ready to commence building our predictive models.
 
 # Part 2 Predict Opportunity Amount
 All businesses are interested in knowing how much revenue they can make for each transaction, therefore being able to estimate the value of a sales opportunity would be very useful. For this project, the objective will be to predict the values in the **Amount** column and this will be accomplished through the use of Regression algorithms. But first, we will first need to prepare our data for model generation.
@@ -151,7 +155,7 @@ Using this method, 20 out of 44 features were removed. The selected features are
 
 ![pvalue2](https://darylcheong.github.io/GA-Capstone/images/pvalue2.png)
 
-### 2.2 - Prepare target/predictor variables and train/test sets
+### 2.2 - Prepare training/testing data
 To prepare our data, we will use the holdout method to split our dataset. We will use training set that comprises of 70% of the data to train our models, and a testing set of 30% to assess their predictions. 5-fold cross validation will also be applied to the training set for each of our models. 
 ```
 X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, random_state=100)
@@ -200,7 +204,7 @@ As mentioned earlier, the ideal model selected will be judged according to their
 
 In part 3 of this project, we will now create classification models to predict the sales opportunity outcome (**Result** column). Previously in our pre-processing stage, we converted the values in the **Result** column into binary numbers. In this case, the number 1 will represent the opportunities that were won, while the number 0 represents the opportunities that were lost. Hence, our goal will be to accurately predict the highest number of 1s.
 
-### 3.1 - Prepare target/predictor variables and train/test sets
+### 3.1 - Prepare training/testing data
 To prepare our data, we will use the holdout method to split our dataset. We will use training set that comprises of 70% of the data to train our models, and a testing set of 30% to assess their predictions. 5-fold cross validation will also be applied to the training set for each of our models. 
 
 Our models will need to achieve an accuracy score that is higher than the baseline of 0.77408.
