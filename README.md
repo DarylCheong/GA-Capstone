@@ -74,7 +74,7 @@ Missing values is a common problem faced in data science. Fortunately, our datas
 
 Next, a check will be conducted on the 3 ratio columns (**Ratio_Identify**, **Ratio_Validate**, **Ratio_Qualify**) to ensure that the total value does not exceed 1. A new column **Total_Ratio** will be created that sums up the values of these 3 columns.
 
-The results of the new **Total_Ratio** column shows that there are 471 records with a total ratio that exceeds the total of 1. Upon closer inspection, the exceeded amount for each of these records is very minor and it is safe to assume that this is possibly due to the rounding of the 3 values and thus these records will remain as is.
+The results of the new **Total_Ratio** column shows that there are 471 records with a total ratio that exceeds the total of 1. Upon closer inspection, the exceeded amount for each of these records is very minor and it is safe to assume that this is possibly due to the rounding in the 3 ratio columns and thus these records will remain as is.
 
 ![rounding](https://darylcheong.github.io/GA-Capstone/images/rounding.png)
 
@@ -133,7 +133,7 @@ cars2 = pd.concat([cars2, cat_dummy], axis=1)
 With pre-processing completed, we are now ready to commence building our predictive models.
 
 # Part 2 Predict Opportunity Amount
-All businesses are interested in knowing how much revenue they can make for each transaction, therefore being able to estimate the value of a sales opportunity would be very useful. For this project, the objective will be to predict the values in the **Amount** column and this will be accomplished through the use of Regression algorithms. But first, we will first need to prepare our data for model generation.
+All businesses are interested in knowing how much revenue they can make for each transaction, therefore the ability to predict the value of a sales opportunity would be very insightful. In this section, the objective will be to predict the values in the **Amount** column and through the use of Regression algorithms. But first, we will need to take additional steps to prepare our data for model generation.
 
 ![revenue](https://darylcheong.github.io/GA-Capstone/images/revenue.png)
 
@@ -156,7 +156,7 @@ Using this method, 20 out of 44 features were removed. The selected features are
 ![pvalue2](https://darylcheong.github.io/GA-Capstone/images/pvalue2.png)
 
 ### 2.2 - Prepare training/testing data
-To prepare our data, we will use the holdout method to split our dataset. We will use training set that comprises of 70% of the data to train our models, and a testing set of 30% to assess their predictions. 5-fold cross validation will also be applied to the training set for each of our models. 
+To prepare our data, we will use the holdout method to split our dataset. We will use training set that comprises of 70% of the data to train our models, and a testing set of 30% to assess their predictions. 5-fold cross validation will also be applied to the training set for all models. 
 ```
 X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, random_state=100)
 ```
@@ -170,7 +170,7 @@ Model construction can begin by using the new prepared datasets.
 4. SGD Regression
 5. Random Forest Regression
 
-The example diagram below illustrates the code use to build the **Lasso Regression** model.
+The diagram below is an example of the code used to build the **Lasso Regression** model.
 
 ![lasso reg](https://darylcheong.github.io/GA-Capstone/images/lasso_reg.png)
 
@@ -183,20 +183,20 @@ Model performance will be judged based on 2 key criterias:-
 1. R^2 score (training, cross validation, testing)
 2. Root Mean Squared Error score (RMSE)
 
-We will also take a look the feature rankings for each model.
+We will also take a look at the feature rankings for the models.
 
 When conducting evaluation, we are looking for a model with a high R^2 score and low RMSE score. The R^2 score would indicate the goodness of fit of a set of predictions on the actual values, RMSE indicates the magnitude of error between the predicted and actual value in terms of the output value.
 
 ![reg results](https://darylcheong.github.io/GA-Capstone/images/reg_results.png)
 
-Looking at the compiled results, we see that **Linear**, **Lasso** and **Ridge Regression** achieved the highest R^2 scores, and the results were identical. Even their RMSE score was almost the same. On the other hand, the **Random Forest Regression** model performed the worst with the lowest R^2 score and highest RMSE score.
+Looking at the compiled results, we see that **Linear**, **Lasso** and **Ridge Regression** achieved the highest R^2 scores, and the results were identical. Even their RMSE scores were almost exact. On the other hand, the **Random Forest Regression** model performed the worst with the lowest R^2 score and highest RMSE score.
 
 ![coef results](https://darylcheong.github.io/GA-Capstone/images/coef_results.png)
 
-In terms of feature ranking, all 5 models share the same features that occupy the top 4 ranks, which are **Size_above_60K**, **Size_50K_to_60K**, **Size_40K_to_50K** and **Size_30K_to40K**. After that we start to see a difference in feature rankings between models. These top 4 features also have very similar coefficient values, with the exception of the **Random Forest Regression** model which uses a different weights scale. The coefficient values show us how large of an impact a particular feature has on the overall opportunity amount. 
+In terms of feature ranking, all 5 models share the same features that occupy the top 4 ranks, which are **Size_above_60K**, **Size_50K_to_60K**, **Size_40K_to_50K** and **Size_30K_to_40K**. After that, feature rankings begin to differentiate between models. These top 4 features also have very similar coefficient values, with the exception of the **Random Forest Regression** model which uses a different weights scale. The coefficient values show us how large of an impact a particular feature has on the overall opportunity amount. 
 
 ### 2.5 - Model Selection
-As mentioned earlier, the ideal model selected will be judged according to their R^2 and RMSE scores. As **Linear Regression**, **Lasso Regression** and **Ridge Regression** had the highest R^2 testing score and their values are identical, we will then compare the RMSE score between these 3 models. Based on our evaluation of the results above, we can conclude that the **Ridge Regression model** is the best choice with the lowest RMSE score of 39646.3218.
+As mentioned earlier, the ideal model is judged according to their R^2 and RMSE scores. As **Linear Regression**, **Lasso Regression** and **Ridge Regression** had the highest R^2 testing score and their values are identical, we will then compare the RMSE score between these 3 models. Based on our evaluation of the results above, we can conclude that the **Ridge Regression model** is the best choice with the lowest RMSE score of 39646.3218.
 
 # Part 3 Predict Opportunity Outcome
 
