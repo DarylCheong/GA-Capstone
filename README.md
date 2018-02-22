@@ -202,14 +202,14 @@ As mentioned earlier, the ideal model is judged according to their R^2 and RMSE 
 
 ![sales growth](https://darylcheong.github.io/GA-Capstone/images/sales_growth.jpg)
 
-In part 3 of this project, we will now create classification models to predict the sales opportunity outcome (**Result** column). Previously in our pre-processing stage, we converted the values in the **Result** column into binary numbers. In this case, the number 1 will represent the opportunities that were won, while the number 0 represents the opportunities that were lost. Hence, our goal will be to accurately predict the highest number of 1s.
+In part 3 of this project, we will now create classification models to predict the sales opportunity outcome (**Result** column). The ability to predict the outcome enables a business to identify influencing factors and also better utilize their resources.
+
+Previously in our pre-processing stage, we converted the values in the **Result** column into binary numbers. The value 1 represents the opportunities that were won, while the value 0 signifies the opportunities that were lost. Hence, our goal will be to accurately predict the highest number of 1s.
 
 ### 3.1 - Prepare training/testing data
-To prepare our data, we will use the holdout method to split our dataset. We will use training set that comprises of 70% of the data to train our models, and a testing set of 30% to assess their predictions. 5-fold cross validation will also be applied to the training set for each of our models. 
+For this prediction, we will also be using the holdout method to create the training and testing datasets, and incorporating 5-fold cross-validation into the models. 
 
-Our models will need to achieve an accuracy score that is higher than the baseline of 0.77408.
-
-The next step incorporates the **SelectFromModel** function from **sklearn** to perform feature selection, and the **RandomForestClassifier** will be applied inside the function as an estimator to identify the feature importance. 
+The next step incorporates the **SelectFromModel** function from **sklearn** to perform feature selection, and apply the **RandomForestClassifier** inside the function as an estimator to identify the feature importance. 
 ```
 from sklearn.feature_selection import SelectFromModel
 from sklearn.ensemble import RandomForestClassifier
@@ -272,7 +272,8 @@ Another interesting point to note is that default models achieved higher precisi
 
 ![accuracy results](https://darylcheong.github.io/GA-Capstone/images/accuracy_results.png)
 
-In terms of accuracy scores, the testing results of all 9 models were able to exceed the baseline accuracy of 0.77408. The **Logistic Regression** models in general had the lowest scores, while the **Random Forest** models had the best.
+
+In terms of accuracy scores, our models will need to achieve an accuracy score that is higher than the baseline of 0.77408.  From the results, all 9 models were able to exceed the baseline. The **Logistic Regression** models in general had the lowest scores, while the **Random Forest** models had the best.
 
 When comparing the 4 accuracy graphs,the random forest (oversample) model was consistently able to achieve one of the highest scores across all 4.
 
@@ -291,8 +292,7 @@ When comparing the **Random Forest** and **KNN** models, the undersampling model
 Since our goal is to predict the highest number of win opportunities, a model with high recall is desired. Being able to identify these accurately will mean more revenue for the business. Based on this, the **K-Nearest Neighbors (undersample)** model was able to achieve the highest recall score of 0.83, the highest **True Positive (TP)** rate of 4349, and lowest **False Negative (FN)** rate of 877. While its Type II error (**FP**) is one of the highest out of all the models, it is more acceptable to wrongly predict a loss opportunity than an inaccurate prediction of a won opportunity. Therefore, this model would be most suitable to achieve our goal of predicting the opportunity outcome.
 
 # Conclusion
-
-
+After constructing our predictive models and analysing the results, we can conclude that the goals that were originally set have been achieved. The **Ridge Regression** model is suitable to predict the value of sales opportunities, and the **K-Nearest Neighbors (undersample)** model can be used to predict the outcome. Overall, this project demonstrates the usefulness of machine learning in creating business insights.
 
 To view the full code, please check out the links below:  
 [Part 1 Pre-Processing](https://github.com/DarylCheong/GA-Capstone/blob/master/GA-DSI2-Capstone-Part1-Preprocessing.ipynb)  
