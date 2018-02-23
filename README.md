@@ -38,7 +38,7 @@ Due to its importance, this project will examine the sales process of an organis
 ![sales pipeline](https://darylcheong.github.io/GA-Capstone/images/sales_pipeline.png)
 
 ### 1.1 - Data Overview
-In this project, we will be looking at the sales database for an auntomotive suppliers wholesaler. This is a sample dataset provided by [IBM Watson Analytics](https://www.ibm.com/communities/analytics/watson-analytics-blog/sales-win-loss-sample-dataset/). The goal of the sales process is to identify and communicate with potential leads, and explore opportunities to convert them into customers. For this project, the database contains records of every sales opportunity with information about the client, product, and process status which focuses on 3 key stages:-
+In this project, we will be looking at the sales database for an automotive supplies wholesaler. This is a sample dataset provided by [IBM Watson Analytics](https://www.ibm.com/communities/analytics/watson-analytics-blog/sales-win-loss-sample-dataset/). The goal of the sales process is to identify and communicate with potential leads, and explore opportunities to convert them into customers. For this project, the database contains records of every sales opportunity with information about the client, product, and process status which focuses on 3 key stages:-
 1. Identified/Qualifying 
 2. Qualified/Validating 
 3. Validated/Gaining Agreement
